@@ -1,5 +1,6 @@
+#[macro_use]
 macro_rules! collision_generator {
-    ($name:tt, $type:ty, $component:expr) => {
+    ($name:tt, $type:ty) => {
         //use avian2d::prelude::{Collider, Friction, Restitution, RigidBody, Sensor};
         //use bevy_ecs_ldtk::prelude::LdtkProjectHandle;
         //use std::collections::{HashMap, HashSet};
@@ -140,11 +141,9 @@ macro_rules! collision_generator {
                             .spawn_empty()
                             .insert(Collider::rectangle(
                                 ((wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                    * grid_size as f32)
-                                    - 0.1,
+                                    * grid_size as f32),
                                 ((wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                    * grid_size as f32)
-                                    - 0.1,
+                                    * grid_size as f32),
                             ))
                             .insert(RigidBody::Static)
                             .insert(Friction::new(0.0))
@@ -157,48 +156,6 @@ macro_rules! collision_generator {
                                 0.,
                             ))
                             .insert(GlobalTransform::default());
-                        level
-                            .spawn_empty()
-                            .insert(Collider::rectangle(
-                                ((wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                    * grid_size as f32)
-                                    + 1.0,
-                                ((wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                    * grid_size as f32)
-                                    - 2.0,
-                            ))
-                            .insert(Transform::from_xyz(
-                                (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
-                                    / 2.,
-                                (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
-                                    / 2.,
-                                0.,
-                            ))
-                            .insert(GlobalTransform::default())
-                            .insert(Sensor)
-                            //.insert(CollisionMargin(0.1))
-                            .insert($component);
-                        level
-                            .spawn_empty()
-                            .insert(Collider::rectangle(
-                                ((wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                    * grid_size as f32)
-                                    - 2.0,
-                                ((wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                    * grid_size as f32)
-                                    + 1.0,
-                            ))
-                            .insert(Transform::from_xyz(
-                                (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
-                                    / 2.,
-                                (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
-                                    / 2.,
-                                0.,
-                            ))
-                            .insert(GlobalTransform::default())
-                            .insert(Sensor)
-                            //.insert(CollisionMargin(0.1))
-                            .insert($component);
                     }
                 });
             });

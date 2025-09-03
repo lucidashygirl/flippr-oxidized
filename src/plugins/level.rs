@@ -3,7 +3,7 @@ use crate::data::bundles::{
     YellowWallBundle,
 };
 use crate::data::components::{
-    Blue, BlueWall, Green, GreenWall, Purple, PurpleWall, Red, RedWall, Yellow, YellowWall,
+    BlueWall, GreenWall, Player, PlayerAddons, PlayerSensor, PurpleWall, RedWall, YellowWall,
 };
 use avian2d::prelude::*;
 use bevy::prelude::*;
@@ -25,6 +25,7 @@ impl Plugin for LevelPlugin {
             .add_systems(
                 Update,
                 (
+                    process_player,
                     generate_blue_tiles,
                     generate_red_tiles,
                     generate_yellow_tiles,
@@ -46,16 +47,27 @@ fn spawn_project(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn level_swap(
-    mut commands: Commands,
+    commands: Commands,
     input: Res<ButtonInput<KeyCode>>,
     level_select: Res<LevelSelection>,
 ) {
 }
 
+fn process_player(
+    mut commands: Commands,
+    new_entity_instances: Query<Entity, (Without<PlayerAddons>, With<Player>)>,
+) {
+    new_entity_instances.iter().for_each(|entity| {
+        commands
+            .entity(entity)
+            .insert((PlayerAddons, children![PlayerSensor::new(14.1, 14.1)]));
+    });
+}
+
 use std::collections::{HashMap, HashSet};
 
-collision_generator!(generate_blue_tiles, BlueWall, Blue);
-collision_generator!(generate_red_tiles, RedWall, Red);
-collision_generator!(generate_green_tiles, GreenWall, Green);
-collision_generator!(generate_yellow_tiles, YellowWall, Yellow);
-collision_generator!(generate_purple_tiles, PurpleWall, Purple);
+collision_generator!(generate_blue_tiles, BlueWall);
+collision_generator!(generate_red_tiles, RedWall);
+collision_generator!(generate_green_tiles, GreenWall);
+collision_generator!(generate_yellow_tiles, YellowWall);
+collision_generator!(generate_purple_tiles, PurpleWall);
